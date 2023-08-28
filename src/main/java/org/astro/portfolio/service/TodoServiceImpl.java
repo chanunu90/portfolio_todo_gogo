@@ -64,7 +64,7 @@ public class TodoServiceImpl implements TodoService{
 
         List<TodoDTO> list = todoMappers.todoSelectAll(pageRequestDTO);
         Long total = todoMappers.getListCount(pageRequestDTO);
-
+        
         log.info("===========================================================");
         log.info(list);
 

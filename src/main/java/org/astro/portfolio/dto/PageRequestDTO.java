@@ -18,6 +18,8 @@ public class PageRequestDTO {
   @Builder.Default
   private int size = 10;
 
+  private boolean replyLast; // 댓글 페이지 마지막 페이지 유무
+
   public void setPage(int page){
     if(page <= 0){
       this.page = 1;

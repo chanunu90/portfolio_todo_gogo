@@ -1,6 +1,9 @@
 package org.astro.portfolio.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -18,18 +21,17 @@ import lombok.ToString;
 public class ReplyDTO {
     
     private Long rno;
-    private Long bno;
+    private Long tno;
     private Long gno;
-    // @Builder.Default
-    // private boolean ord = false;
+
+    private Long step;
+
     private boolean delFlag;
 
     private String reply;
-    private String nickname;
-    
-    // private Long mno;
-    // private String email;
-    // private String nickname;
+    private String replyer;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDate replydate;
 
 }

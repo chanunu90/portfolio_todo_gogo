@@ -4,20 +4,18 @@
       layout:decorate="~{layout/lteLayout.html}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
     <div layout:fragment="content">
         [[${Todo}]]
-        <!-- TodoDTO(tno=1495, title=title43, writer=글쓴이43, content=내용43, state=false, regDate=2023-07-16 17:34:37, updateDate=null) -->
+
+        
         <h1>조회 페이지</h1>
-
-
 
         <div class="row">
             <div class="col-md-12">
-              <!-- Box Comment -->
+
               <div class="card card-widget">
                 <div class="card-header">
                   <div class="user-block">
@@ -26,9 +24,9 @@
                     <span class="description">[[${Todo.title}]] - [[${Todo.regDate}]]</span>
                   </div>
                 </div>
-                <!-- /.card-header -->
+
                 <div class="card-body">
-                  <img class="img-fluid pad" src="../dist/img/photo2.png" alt="게시글 이미지">
+                  <img class="img-fluid pad" src="../dist/img/picture.jpg" alt="게시글 이미지">
   
                   <p>게시글 내용 [[${Todo.contents}]]</p>
 
@@ -46,53 +44,177 @@
                 </div>
                 <!-- 댓글 폼 -->
                 <div class="card-footer card-comments">
-                  <div class="card-comment">
-                    <!-- User image -->
-                    <img class="img-circle img-sm" src="../dist/img/user3-128x128.jpg" alt="User Image">
-  
-                    <div class="comment-text">
-                      <span class="username">
-                        댓글 쓴사람1
-                        <span class="text-muted float-right">작성 시간 8:03 PM Today</span>
-                      </span><!-- /.username -->
-                        댓글 내용
-                    </div>
-                    <!-- /.comment-text -->
+
+                  <div class="replyUL">
+
                   </div>
-                  <!-- /.card-comment -->
-                  <div class="card-comment">
-                    <!-- User image -->
-                    <img class="img-circle img-sm" src="../dist/img/user4-128x128.jpg" alt="User Image">
-  
-                    <div class="comment-text">
-                      <span class="username">
-                        댓글 쓴사람2
-                        <span class="text-muted float-right">작성 시간 8:03 PM Today</span>
-                      </span><!-- /.username -->
-                      댓글 내용
-                    </div>
-                    <!-- /.comment-text -->
-                  </div>
-                  <!-- /.card-comment -->
+
+                </div>
+                <!-- 댓글 페이징 -->
+                <div class="card-footer clearfix" style="display: flex; justify-content: center;">
+                  <ul class="pagination pagination-sm m-0 todoUL">
+                    <li class="page-item"><a class="page-link" href="10">&laquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="11">11</a></li>
+                    <li class="page-item"><a class="page-link" href="12">12</a></li>
+                    <li class="page-item"><a class="page-link" href="13">13</a></li>
+                    <li class="page-item"><a class="page-link" href="21">&raquo;</a></li>
+                  </ul>
                 </div>
                 <!-- 댓글 쓰기  -->
                 <div class="card-footer">
                   <form action="#" method="post">
-                    <img class="img-fluid img-circle img-sm" src="../dist/img/user4-128x128.jpg" alt="Alt Text">
+                    <span>댓글 쓰기</span>
                     <!-- .img-push is used to add margin to elements next to floating images -->
                     <div class="img-push">
-                      <input type="text" class="form-control form-control-sm" placeholder="Press enter to post comment">
+                      <input type="text" name="reply" class="form-control form-control-sm" placeholder="내용을 입력하세요.">
+                      <input type="text" name="replyer" class="form-control form-control-sm" placeholder="익명 아이디를 입력하세요.">
+                    </div>
+                    <div class="registReply">
+                      <div class="registReplyButton" style="cursor: pointer; float: right; margin: 2px; border: 2px solid black;">
+                         댓글 입력하기
+                      </div>
                     </div>
                   </form>
                 </div>
-                <!-- /.card-footer -->
+
               </div>
-              <!-- /.card -->
             </div>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 
+        <script src="/js/pageUtil.js"></script>
 
     </div>
+    
+    <script layout:fragment="script" th:inline="javascript">
+
+      // alert([[${Todo.tno}]])
+      // 페이징 처리
+      const todoUL = document.querySelector(".todoUL")
+
+      todoUL.addEventListener("click", (e) => {
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = e.target
+        const pageNum = target.getAttribute("href")
+
+        // alert(pageNum)
+
+        loadReplyData(false , pageNum)
+
+      }, false)
+      // 페이징 처리 끝
+
+      //페이징 유틸로 빼둠
+      // const pageLIStr = makePages(page,size, total)
+      // todoUL.innerHTML = pageLIStr
+
+      const replyUL = document.querySelector(".replyUL")
+      // const tno = [[${Todo.tno}]]
+      const {tno , writer} = [[${Todo}]]
+
+      //댓글 목록 가지고오기
+      const getRemoteList = async (replyLast = false, page = 1) => {
+            const res = await axios.get(`http://localhost:8080/api/replies/${tno}/list?page=${page}&replyLast=${replyLast}`)
+            console.log(res)
+            return res.data
+      }
+
+      function loadReplyData (replyLast, pageNum) {
+        
+          getRemoteList(replyLast , pageNum).then(arr => {
+          console.log("then result---------------")
+
+          //페이징 3가지
+          const total = arr.total;
+          const page = pageNum;
+          const size = 10;
+
+          const pageLIStr = makePages(page, size, total)
+          todoUL.innerHTML = pageLIStr
+          
+          let str = ""
+    
+          if(!arr){
+              return
+          }
+    
+          for(let i = 0; i < arr.list.length; i++){
+              const {rno,tno,reply,replyer,step,replydate} = arr.list[i]
+    
+              str += step === 0 ? 
+              `<div class="card-comment" data-rno= ${rno} data-reply= ${reply} data-replyer= ${replyer}>
+                <div class="">
+                  <span class="username">
+                    ${replyer}
+                    <span class="text-muted float-right">${replydate}</span>
+                  </span>
+                  ${reply}
+                  <span class="text-muted float-right"><button>댓글수정</button></span>
+                </div>  
+              </div>`
+              :
+              `
+              <div style="display: flex;">
+                <div>
+                  <span>L</span>
+                </div>
+                
+                <div class="card-comment" data-rno="${rno}" data-reply="${reply}" data-replyer="${replyer}" style="width:100%">
+                  <div class="" style="margin-left: 20px;">
+                    <span class="username">
+                      ${replyer}
+                      <span class="text-muted float-right">${replydate}</span>
+                    </span>
+                    ${reply}
+                    <span class="text-muted float-right"><button>수정</button></span>
+                  </div>  
+                </div>
+
+              </div>
+              `
+          }
+
+          replyUL.innerHTML = str
+
+    
+          }).catch(e => {
+
+            alert("목록을 가지고오지 못함")
+            
+          })
+          
+      }
+      loadReplyData(false , 1)
+
+
+
+      //댓글 입력하기
+      const registReplyButton = registReplyButton.querySelector(".registReplyButton");
+      const reply = document.querySelector("input[name='reply']")
+      const replyer = document.querySelector("input[name='replyer']")
+
+
+      const addReply = async (reply , replyer) => {
+
+        const dto = {
+          "reply" : reply,
+          "replyer" : replyer
+        }
+
+        const res = await axios.post()
+
+        return res.data
+      }
+
+      registReplyButton.addEventListener("click" , (e) => {
+        
+      })
+
+    </script>
+
 </body>
 </html>

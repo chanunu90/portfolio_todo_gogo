@@ -11,7 +11,7 @@
     <div layout:fragment="content">
         [[${Todo}]]
         <!-- TodoDTO(tno=1495, title=title43, writer=글쓴이43, content=내용43, state=false, regDate=2023-07-16 17:34:37, updateDate=null) -->
-        <h1>수정 페이지</h1>
+        <h1>게시글 수정 페이지</h1>
 
 
 
@@ -24,7 +24,14 @@
                     <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="회원 이미지">
                     <span class="username"><a href="#">[[${Todo.writer}]]</a></span>
                     <span class="description">[[${Todo.title}]] - [[${Todo.regDate}]]</span>
+
+                    
+
+
                   </div>
+
+
+
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -32,7 +39,12 @@
   
                   <p>게시글 내용 [[${Todo.contents}]]</p>
 
-
+                  <div>
+                    <form action="/portfolio/modify" method="get">
+                      <input type="hidden" name="tno" th:value="${Todo.tno}">
+                      <button type="submit">글 수정</button>
+                    </form>
+                  </div>
 
                 </div>
                 <!-- /.card-footer -->

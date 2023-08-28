@@ -11,4 +11,26 @@
     </select>
 
 
+    <select id="getReplyAll" resultType="org.astro.portfolio.dto.ReplyDTO">
+        select
+            if(rno = gno, 0, 1) as step, rno, tno, gno, reply, replyer, replydate
+        from tbl_reply2
+        where tno = #{tno} order by gno asc, rno asc
+        limit #{pr.skip}, #{pr.size}
+    </select>
+
+    <select id="getCountReply" resultType="long">
+        select count(*) 
+        from 
+        (select tno from tbl_reply2 
+        where tno > 0 limit #{countEnd}) tbl_reply2
+    </select>
+
+    <insert id="addReply">
+        insert into tbl_reply2 (tno,reply,replyer,gno)
+        values (#{tno}, #{reply}, #{replyer}, #{gno})
+    </insert>
+    
+
+
 </mapper>

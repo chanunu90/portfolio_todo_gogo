@@ -57,7 +57,7 @@ public class TodoDTO {
       if(images!=null){
         // picture.add(images.split("\\.")[0] + "." + "png"); 
         // return picture;
-        picture = images.split("\\.")[0] + "." + "png"; 
+        picture = images.split("\\.")[0] + "." + "jpg"; 
 
         return picture;
       }
