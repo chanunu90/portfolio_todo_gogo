@@ -30,9 +30,9 @@ public class ReplyServiceImpl implements ReplyService {
         List<ReplyDTO> list = replyMappers.getReplyAll(tno, pageRequestDTO);
         Long total = replyMappers.getCountReply(pageRequestDTO);
 
-log.info("---------------=================-----------");
+        log.info("---------------=================-----------");
         log.info(list);
-log.info("---------------=============-----------");
+        log.info("---------------=============-----------");
         return PageResponseDTO.<ReplyDTO>withAll()
         .list(list)
         .total(total)
