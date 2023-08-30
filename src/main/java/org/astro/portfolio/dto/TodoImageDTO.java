@@ -1,14 +1,7 @@
 package org.astro.portfolio.dto;
 
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,5 +25,5 @@ public class TodoImageDTO {
   private List<String> images = new ArrayList<>();
 
   private int ord;
-
+  
 }

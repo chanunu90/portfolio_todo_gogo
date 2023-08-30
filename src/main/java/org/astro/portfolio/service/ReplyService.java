@@ -9,5 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ReplyService {
 
     PageResponseDTO<ReplyDTO> getReplyAll(Long tno , PageRequestDTO pageRequestDTO);
-    
+
+    Long addReply(ReplyDTO replyDTO);
+
 }

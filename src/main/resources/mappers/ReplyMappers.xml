@@ -25,11 +25,34 @@
         (select tno from tbl_reply2 
         where tno > 0 limit #{countEnd}) tbl_reply2
     </select>
-
+    
     <insert id="addReply">
         insert into tbl_reply2 (tno,reply,replyer,gno)
         values (#{tno}, #{reply}, #{replyer}, #{gno})
+        <selectKey resultType="long" keyProperty="rno" order="AFTER">
+            select last_insert_id()
+        </selectKey>
     </insert>
+
+    <!-- 댓글일 경우에만 gno에 rno 대입 -->
+    <update id="updateReplyGno">
+        update tbl_reply2
+        set gno = #{rno}
+        where rno = #{rno}
+    </update>
+
+
+    <!-- 대댓글 경우 -->
+    <insert id="registerReplyChild">
+        insert into tbl_reply (bno, reply, replyer, gno)
+        values (#{bno}, #{reply}, #{replyer}, #{gno})
+        <selectKey resultType="long" keyProperty="rno" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+
+
     
 
 

@@ -25,7 +25,7 @@ public class ReplyDTO {
     private Long gno;
 
     private Long step;
-
+ 
     private boolean delFlag;
 
     private String reply;

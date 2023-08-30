@@ -18,8 +18,9 @@ public interface ReplyMappers {
 
     Long getCountReply(PageRequestDTO pageRequestDTO);
 
-
     Long addReply(ReplyDTO replyDTO);
+    
+    Long updateReplyGno(Long rno);
     
     
 }

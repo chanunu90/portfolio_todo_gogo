@@ -62,32 +62,146 @@
                 </div>
                 <!-- 댓글 쓰기  -->
                 <div class="card-footer">
-                  <form action="#" method="post">
+                  <!-- <form action="#" method="post"> -->
                     <span>댓글 쓰기</span>
                     <!-- .img-push is used to add margin to elements next to floating images -->
                     <div class="img-push">
-                      <input type="text" name="reply" class="form-control form-control-sm" placeholder="내용을 입력하세요.">
-                      <input type="text" name="replyer" class="form-control form-control-sm" placeholder="익명 아이디를 입력하세요.">
+                      <input type="text" name="reply" class="form-control form-control-sm" placeholder="내용을 입력하세요." value="reply">
+                      <input type="text" name="replyer" class="form-control form-control-sm" placeholder="익명 아이디를 입력하세요." value="replyer">
                     </div>
-                    <div class="registReply">
+                    <!-- <div class="registReply"> -->
                       <div class="registReplyButton" style="cursor: pointer; float: right; margin: 2px; border: 2px solid black;">
                          댓글 입력하기
                       </div>
-                    </div>
-                  </form>
+                    <!-- </div> -->
+                  <!-- </form> -->
                 </div>
 
               </div>
             </div>
         </div>
+
+        <!-- 모달 시작 -->
+        <!-- <div class="modal alertModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-body">[[${message}]]</div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div> -->
+    
+        <div class="modal replyModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                Reply Register
+              </div>
+              <div class="modal-body replyRegister">
+                <input type="text" name="bno" value="testbno">
+                <input type="text" name="gno" value="testgno">
+
+                <input type="text" name="replyer" value="대댓글쓰는사람">
+                <input type="text" name="reply" class="form-control">
+                <div class="replyGno"></div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary btnRegister2">Reply Register</button>
+                <button type="button" class="btn btn-secondary btn-close" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="modal replyModModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                Reply Modify
+              </div>
+              <div class="modal-body replyModify">
+                <input type="text" name="replyer" value="test_chaeunwoo">
+                <input type="text" name="reply" class="form-control">
+                <div class="replyModifyVal"></div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary btnReplyModify">Reply Modify</button>
+                <button class="btn btn-danger btnDelete">Reply Delete</button>
+                <button type="button" class="btn btn-secondary btn-close" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 모달끝 -->
+
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-
         <script src="/js/pageUtil.js"></script>
 
     </div>
     
     <script layout:fragment="script" th:inline="javascript">
+
+
+      // 모달 관련 
+      // const alertModal = new bootstrap.Modal(document.querySelector(".alertModal"))
+      // 대댓글모달
+      const replyModal = new bootstrap.Modal(document.querySelector(".replyModal"))
+      // 수정모달
+      const replyModModal = new bootstrap.Modal(document.querySelector(".replyModModal"))
+      const replyModify = document.querySelector(".replyModify")
+
+      const replyUL = document.querySelector(".replyUL")
+      // const replyBtn = document.querySelector(".replyBtn");
+      
+      replyUL.addEventListener("click" , (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = e.target
+
+        //버튼클릭이 아닐경우 리턴
+        if(target.getAttribute("data-gno") === null) return;
+
+        //대댓쓰기인지 체크
+        const rereply = target.getAttribute("data-rereply");
+
+        const rno = target.getAttribute("data-rno");
+        const gno = target.getAttribute("data-gno");
+        const reply = target.getAttribute("data-reply");
+        const replyer = target.getAttribute("data-replyer");
+
+        console.log(rno);
+        console.log(gno);
+        console.log(reply);
+        console.log(replyer);
+
+        replyModify.querySelector("input[name='replyer']").value = replyer;
+        replyModify.querySelector("input[name='reply']").value = reply;
+
+
+        if(rereply){
+          replyModal.show();
+        }else{
+          replyModModal.show();
+        }
+       
+
+      })
+
+
+
+
+      //모달 숨기기
+      document.querySelector(".btn-close").addEventListener("click" , (e) => {
+
+        replyModal.hide()
+        replyModModal.hide()
+
+      })
+
+      //모달 관련 끝-----------------------------------------------------
 
       // alert([[${Todo.tno}]])
       // 페이징 처리
@@ -112,49 +226,59 @@
       // const pageLIStr = makePages(page,size, total)
       // todoUL.innerHTML = pageLIStr
 
-      const replyUL = document.querySelector(".replyUL")
+      
       // const tno = [[${Todo.tno}]]
       const {tno , writer} = [[${Todo}]]
 
       //댓글 목록 가지고오기
       const getRemoteList = async (replyLast = false, page = 1) => {
-            const res = await axios.get(`http://localhost:8080/api/replies/${tno}/list?page=${page}&replyLast=${replyLast}`)
-            console.log(res)
-            return res.data
-      }
+          
+        const res = await axios.get(`http://localhost:8080/api/replies/${tno}/list?page=${page}&replyLast=${replyLast}`)
+
+        console.log(res)
+
+        return res.data
+
+      } 
 
       function loadReplyData (replyLast, pageNum) {
-        
+
           getRemoteList(replyLast , pageNum).then(arr => {
           console.log("then result---------------")
 
+          console.log(arr)
+
           //페이징 3가지
           const total = arr.total;
-          const page = pageNum;
+          const page = replyLast !== true ? pageNum : arr.page;
           const size = 10;
 
           const pageLIStr = makePages(page, size, total)
           todoUL.innerHTML = pageLIStr
           
           let str = ""
-    
+          
           if(!arr){
               return
           }
-    
+          
           for(let i = 0; i < arr.list.length; i++){
-              const {rno,tno,reply,replyer,step,replydate} = arr.list[i]
-    
-              str += step === 0 ? 
-              `<div class="card-comment" data-rno= ${rno} data-reply= ${reply} data-replyer= ${replyer}>
-                <div class="">
-                  <span class="username">
-                    ${replyer}
-                    <span class="text-muted float-right">${replydate}</span>
-                  </span>
-                  ${reply}
-                  <span class="text-muted float-right"><button>댓글수정</button></span>
-                </div>  
+
+              const {rno,tno,reply,replyer,step,replydate,gno} = arr.list[i]
+
+              str += step === 0 ?
+              
+              `
+              <div class="card-comment" >
+                <span class="username">
+                  ${replyer}
+                  <span class="text-muted float-right">${replydate}</span>
+                </span>
+                ${reply}
+                <span class="text-muted float-right">
+                  <div class="replyBtn" data-rno= ${rno} data-gno= ${gno} data-reply= ${reply} data-replyer= ${replyer} data-rereply="true">댓글달기</div>
+                  <div class="replyBtn" data-rno= ${rno} data-gno= ${gno} data-reply= ${reply} data-replyer= ${replyer}>댓글수정</div>
+                </span>
               </div>`
               :
               `
@@ -163,14 +287,17 @@
                   <span>L</span>
                 </div>
                 
-                <div class="card-comment" data-rno="${rno}" data-reply="${reply}" data-replyer="${replyer}" style="width:100%">
+                <div class="card-comment"style="width:100%">
                   <div class="" style="margin-left: 20px;">
                     <span class="username">
                       ${replyer}
                       <span class="text-muted float-right">${replydate}</span>
                     </span>
                     ${reply}
-                    <span class="text-muted float-right"><button>수정</button></span>
+                    <span class="text-muted float-right">
+                      <div class="replyBtn" data-rno= ${rno} data-gno= ${gno} data-reply= ${reply} data-replyer= ${replyer} data-rereply="true">댓글달기</div>
+                      <div class="replyBtn" data-rno="${rno}" data-gno= ${gno} data-reply="${reply}" data-replyer="${replyer}">수정</div>
+                    </span>
                   </div>  
                 </div>
 
@@ -190,28 +317,44 @@
       }
       loadReplyData(false , 1)
 
-
-
       //댓글 입력하기
-      const registReplyButton = registReplyButton.querySelector(".registReplyButton");
-      const reply = document.querySelector("input[name='reply']")
-      const replyer = document.querySelector("input[name='replyer']")
-
-
-      const addReply = async (reply , replyer) => {
-
+      const registReplyButton = document.querySelector(".registReplyButton");
+      const addReply = async (replyValue , replyerValue) => {
+      
         const dto = {
-          "reply" : reply,
-          "replyer" : replyer
-        }
+          
+          "reply"   : replyValue,
+          "replyer" : replyerValue,
+          "tno"     : tno
+          
+        } 
 
-        const res = await axios.post()
+        console.log(dto)
+        const res = await axios.post(`http://localhost:8080/api/replies` , dto)
 
         return res.data
+
       }
 
       registReplyButton.addEventListener("click" , (e) => {
-        
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        const reply = document.querySelector("input[name='reply']").value;
+        const replyer = document.querySelector("input[name='replyer']").value;
+
+        addReply(reply , replyer).then(data => {
+
+          //댓글입력시 맨뒤페이지로 가도록
+          loadReplyData(true , 2)
+
+        }).catch( e => {
+
+          alert("입력실패")
+
+        })
+
       })
 
     </script>
