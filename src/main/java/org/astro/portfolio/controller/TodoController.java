@@ -27,9 +27,14 @@ public class TodoController {
 
     PageResponseDTO<TodoDTO> pageResponseDTO = todoService.todoList(pageRequestDTO);
 
+
+        
+
         model.addAttribute("TodoObj", pageResponseDTO);
 
         // model.addAttribute("TodoList", TodoService.TodoList());
+
+        log.info("-----------여기까지인가2------=======================");
         
         return "todo/list";
     }

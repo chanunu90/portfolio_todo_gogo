@@ -42,14 +42,19 @@
     </update>
 
 
-    <!-- 대댓글 경우 -->
-    <insert id="registerReplyChild">
-        insert into tbl_reply (bno, reply, replyer, gno)
-        values (#{bno}, #{reply}, #{replyer}, #{gno})
-        <selectKey resultType="long" keyProperty="rno" order="AFTER">
-            select last_insert_id()
-        </selectKey>
-    </insert>
+    <!-- 댓글 업데이트 -->
+    <update id="updateReply">
+        update tbl_reply2
+        set reply = #{reply}
+        where rno = #{rno}
+    </update>
+
+    <!-- 댓글 삭제 -->
+    <update id="deleteReply">
+        update tbl_reply2
+        set reply = '삭제된 글 입니다.'
+        where rno = #{rno}
+    </update>
 
 
 

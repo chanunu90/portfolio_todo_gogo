@@ -12,4 +12,8 @@ public interface ReplyService {
 
     Long addReply(ReplyDTO replyDTO);
 
+    Long updateReply(ReplyDTO replyDTO);
+
+    Long deleteReply(Long rno);
+    
 }

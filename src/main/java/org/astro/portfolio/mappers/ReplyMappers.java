@@ -21,6 +21,10 @@ public interface ReplyMappers {
     Long addReply(ReplyDTO replyDTO);
     
     Long updateReplyGno(Long rno);
+
+    Long updateReply(ReplyDTO replyDTO);
+    
+    Long deleteReply(Long rno);
     
     
 }

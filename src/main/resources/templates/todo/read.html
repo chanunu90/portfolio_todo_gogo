@@ -100,15 +100,14 @@
                 Reply Register
               </div>
               <div class="modal-body replyRegister">
-                <input type="text" name="bno" value="testbno">
-                <input type="text" name="gno" value="testgno">
-
+                rno<input type="text" name="rno" value="testbno">
+                gno<input type="text" name="gno" value="testgno">
                 <input type="text" name="replyer" value="대댓글쓰는사람">
                 <input type="text" name="reply" class="form-control">
                 <div class="replyGno"></div>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-primary btnRegister2">Reply Register</button>
+                <button class="btn btn-primary btnRegister">Reply Register</button>
                 <button type="button" class="btn btn-secondary btn-close" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
@@ -122,6 +121,8 @@
                 Reply Modify
               </div>
               <div class="modal-body replyModify">
+                rno<input type="text" name="rno" value="testbno">
+                gno<input type="text" name="gno" value="testgno">
                 <input type="text" name="replyer" value="test_chaeunwoo">
                 <input type="text" name="reply" class="form-control">
                 <div class="replyModifyVal"></div>
@@ -129,7 +130,7 @@
               <div class="modal-footer">
                 <button class="btn btn-primary btnReplyModify">Reply Modify</button>
                 <button class="btn btn-danger btnDelete">Reply Delete</button>
-                <button type="button" class="btn btn-secondary btn-close" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-close-r" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -144,13 +145,17 @@
     <script layout:fragment="script" th:inline="javascript">
 
 
-      // 모달 관련 
+      // 모달 관련
       // const alertModal = new bootstrap.Modal(document.querySelector(".alertModal"))
       // 대댓글모달
       const replyModal = new bootstrap.Modal(document.querySelector(".replyModal"))
+      const replyRegister = document.querySelector(".replyRegister")
+      const btnRegister = document.querySelector(".btnRegister")
       // 수정모달
       const replyModModal = new bootstrap.Modal(document.querySelector(".replyModModal"))
       const replyModify = document.querySelector(".replyModify")
+      const btnReplyModify = document.querySelector(".btnReplyModify")
+      const btnDelete = document.querySelector(".btnDelete")
 
       const replyUL = document.querySelector(".replyUL")
       // const replyBtn = document.querySelector(".replyBtn");
@@ -177,26 +182,139 @@
         console.log(reply);
         console.log(replyer);
 
-        replyModify.querySelector("input[name='replyer']").value = replyer;
-        replyModify.querySelector("input[name='reply']").value = reply;
-
-
         if(rereply){
+          replyRegister.querySelector("input[name='gno']").value = gno;
+          replyRegister.querySelector("input[name='rno']").value = rno;
+          replyRegister.querySelector("input[name='replyer']").value = replyer;
+          replyRegister.querySelector("input[name='reply']").value = reply;
           replyModal.show();
         }else{
+          replyModify.querySelector("input[name='gno']").value = gno;
+          replyModify.querySelector("input[name='rno']").value = rno;
+          replyModify.querySelector("input[name='replyer']").value = replyer;
+          replyModify.querySelector("input[name='reply']").value = reply;
           replyModModal.show();
         }
        
 
       })
+      //현재페이지 가지고있기
+      let pageNum = 1;
+
+      // 대댓글 입력
+      btnRegister.addEventListener("click" ,  e => {
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        //대댓글 입력 엑시오스
+        const object = {
+          
+          "reply"   : replyRegister.querySelector("input[name='reply']").value,
+          "replyer" : replyRegister.querySelector("input[name='replyer']").value,
+          "tno"     : tno,
+          "gno"     : replyRegister.querySelector("input[name='gno']").value,
+          "rno"     : replyRegister.querySelector("input[name='rno']").value,
+          
+        } 
+        addReply2(object).then(data => {
+
+          loadReplyData(false , pageNum)
+
+        }).catch(e => {
+
+          alert("등록 실패")
+
+        })
 
 
+        replyModal.hide();
+
+      });
+
+      //대댓글 입력하기
+      const addReply2 = async (object) => {
+      
+        console.log(object)
+        const res = await axios.post(`http://localhost:8080/api/replies` , object)
+
+        return res.data
+
+      }
+
+
+
+      // 댓글 수정하기
+      btnReplyModify.addEventListener("click" , e => {
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        const object = {
+          
+          "reply"   : replyModify.querySelector("input[name='reply']").value,
+          "replyer" : replyModify.querySelector("input[name='replyer']").value,
+          "gno"     : replyModify.querySelector("input[name='gno']").value,
+          "rno"     : replyModify.querySelector("input[name='rno']").value,
+          
+        } 
+
+        updateReply(object).then(data => {
+
+          console.log(data)
+          loadReplyData(false , pageNum)
+
+        }).catch(e => {
+
+          alert("댓글 수정 실패")
+
+        })
+
+      })
+
+      const updateReply = async(object) => {
+
+          const res = await axios.put("http://localhost:8080/api/replies" , object) 
+          return res.data
+
+      }
+
+
+      //댓글 삭제 하기
+      btnDelete.addEventListener("click" , e => {
+
+          e.preventDefault()
+          e.stopPropagation()
+
+          deleteReply(replyModify.querySelector("input[name='rno']").value).then(data => {
+
+            console.log(data)
+            loadReplyData(false , pageNum)
+
+          }).catch(e => {
+
+            alert("댓글 삭제 실패")
+
+          })
+      })
+
+      const deleteReply = async(rno) => {
+
+         const res = await axios.delete(`http://localhost:8080/api/replies/${rno}`) 
+         return res.data
+
+      }
 
 
       //모달 숨기기
       document.querySelector(".btn-close").addEventListener("click" , (e) => {
-
+        
         replyModal.hide()
+        
+      })
+      //모달 숨기기
+      document.querySelector(".btn-close-r").addEventListener("click" , (e) => {
+
         replyModModal.hide()
 
       })
@@ -213,7 +331,7 @@
         e.stopPropagation()
 
         const target = e.target
-        const pageNum = target.getAttribute("href")
+        pageNum = target.getAttribute("href")
 
         // alert(pageNum)
 
@@ -325,7 +443,7 @@
           
           "reply"   : replyValue,
           "replyer" : replyerValue,
-          "tno"     : tno
+          "tno"     : tno,
           
         } 
 

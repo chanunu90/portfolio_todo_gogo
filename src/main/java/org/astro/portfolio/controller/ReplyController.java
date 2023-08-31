@@ -8,6 +8,7 @@ import org.astro.portfolio.dto.ReplyDTO;
 import org.astro.portfolio.service.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 // import org.astro.portfolio.dto.ReplyDTO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -38,11 +40,9 @@ public class ReplyController {
         log.info("----------------------------------------------" + replyLast);
         log.info("----------------------------------------------" + pageRequestDTO.isReplyLast());
        
-
         pageRequestDTO.setReplyLast(replyLast);
 
         log.info("----------------------pageRequestDTO------------------------" + pageRequestDTO);
-
 
         // log.info("----------------------------------------------" + pageRequestDTO);
                 
@@ -59,6 +59,28 @@ public class ReplyController {
                 
         return Map.of("result", replyService.addReply(replyDTO));
         
+    }
+
+    @PutMapping(value = "")
+    public Map<String , String> updateReply(@RequestBody ReplyDTO replyDTO){
+
+        log.info("==================================================");
+        log.info(replyDTO);
+        log.info("--------------------------------------------------");
+        replyService.updateReply(replyDTO);
+                
+        return Map.of("result", "clear");
+    }
+
+    @DeleteMapping(value = "{rno}")
+    public Map<String , String> deleteReply(@PathVariable("rno") Long rno){
+
+        log.info("===================rno===============================");
+        log.info(rno);
+        log.info("--------------------rno------------------------------");
+        replyService.deleteReply(rno);
+                
+        return Map.of("result", "clear");
     }
     
     

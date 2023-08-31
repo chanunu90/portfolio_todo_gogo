@@ -64,12 +64,27 @@ public class ReplyServiceImpl implements ReplyService {
     public Long addReply(ReplyDTO replyDTO) {
 
         //댓글입력
+        log.info(replyDTO);
         replyMappers.addReply(replyDTO);
 
-        //입력된 댓글이 대댓글이 아닌경우 gno에 rno 입력
-        replyMappers.updateReplyGno(replyDTO.getRno());
+        //입력된 대댓글이 아닌경우 gno에 rno 입력
+        log.info(replyDTO.getGno());
+
+        return replyDTO.getGno() == null ? replyMappers.updateReplyGno(replyDTO.getRno()) : 1L;
         
-        return replyDTO.getRno();
-        
+    }
+
+    @Override
+    public Long updateReply(ReplyDTO replyDTO) {
+
+        return replyMappers.updateReply(replyDTO);
+
+    }
+
+    @Override
+    public Long deleteReply(Long rno) {
+
+        return replyMappers.deleteReply(rno);
+
     }
 }
