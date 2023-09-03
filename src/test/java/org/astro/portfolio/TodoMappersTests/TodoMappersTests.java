@@ -1,6 +1,7 @@
 package org.astro.portfolio.TodoMappersTests;
 
 import org.astro.portfolio.dto.PageRequestDTO;
+import org.astro.portfolio.dto.TodoDTO;
 import org.astro.portfolio.dto.TodoImageDTO;
 import org.astro.portfolio.mappers.TodoMappers;
 import org.junit.jupiter.api.Test;
@@ -39,24 +40,41 @@ public class TodoMappersTests {
      @Autowired
      private JavaMailSender javaMailSender; 
 
-    @Test
-    public void asd(){
 
-        List<String> emails = mappers.getEmail();
 
-        for (String email : emails) {
 
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setSubject("테스트 메일 제목"); 
-            message.setTo(email);
-            message.setText("메일 내용");
+    // @Test
+    // public void asd(){
 
-            javaMailSender.send(message);
+    //     List<String> emails = mappers.getEmail();
+
+    //     for (String email : emails) {
+
+    //         SimpleMailMessage message = new SimpleMailMessage();
+    //         message.setSubject("테스트 메일 제목"); 
+    //         message.setTo(email);
+    //         message.setText("메일 내용");
+
+    //         javaMailSender.send(message);
               
-        }
+    //     }
 
 
-    }
+    // }
+
+
+    @Test
+    public void selectSearch(){
+
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+        .type("123")
+        .keyword("차은우")
+        .build();
+        
+        List<TodoDTO> TodoList = mappers.todoSelectAll(pageRequestDTO);
+        log.info(TodoList);
+
+    };
 
 
 }

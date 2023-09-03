@@ -12,6 +12,13 @@ import lombok.ToString;
 @Getter
 @ToString
 public class PageRequestDTO {
+
+  //검색 할때 넣을것들
+  //타입
+  private String type;
+  //내용
+  private String keyword;
+
   
   @Builder.Default
   private int page = 1;

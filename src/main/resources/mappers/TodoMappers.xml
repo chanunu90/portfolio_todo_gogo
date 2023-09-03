@@ -12,11 +12,26 @@
 
     <select id="todoSelectAll" resultType="org.astro.portfolio.dto.TodoDTO">
 
-		select tno ,  title , writer , contents ,state ,regDate , updateDate ,  ord ,images
-        from tbl_todo tt left outer join tbl_todo_image ti
-        on tt.tno = ti.image_tno
+        select tno, title, writer, contents, state, regDate, updateDate, ord, images
+        from tbl_todo tt
+        left outer join tbl_todo_image ti on tt.tno = ti.image_tno
         <where>
-            (ti.ord = 0 or ord is null)
+            (ti.ord = 0 or ti.ord is null)
+            <if test="keyword != null and types != null">
+                <trim prefix="and (" prefixOverrides="or" suffix=")">
+                    <foreach collection="types" item="type" separator="or">
+                        <if test='type == "t"'>
+                            tt.title like concat('%', #{keyword}, '%')
+                        </if>
+                        <if test='type == "c"'>
+                            tt.contents like concat('%', #{keyword}, '%')
+                        </if>
+                        <if test='type == "w"'>
+                            tt.writer like concat('%', #{keyword}, '%')
+                        </if>
+                    </foreach>
+                </trim>
+            </if>
         </where>
         order by tno desc
         limit #{skip}, #{size}
