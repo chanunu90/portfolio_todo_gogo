@@ -1,3 +1,5 @@
+apply plugin: 'com.github.ulisesbocchio.jasypt-spring-boot'
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.1'
@@ -47,6 +49,9 @@ dependencies {
 
 	//자바 부트 메일 API
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//암호화용
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot:3.0.3'
 }
 
 tasks.named('test') {
