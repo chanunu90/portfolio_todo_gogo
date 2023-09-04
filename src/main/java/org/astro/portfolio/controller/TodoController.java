@@ -23,18 +23,20 @@ public class TodoController {
    private final org.astro.portfolio.service.TodoService todoService;
 
     @GetMapping("list")
-    public String todoSelectAll(PageRequestDTO pageRequestDTO, Model model){
+    public String todoSelectAll(PageRequestDTO pageRequestDTO, String keyword, String type, Model model){
 
-    PageResponseDTO<TodoDTO> pageResponseDTO = todoService.todoList(pageRequestDTO);
+        log.info("-----------리스트 불러오기------=======================");
 
+        pageRequestDTO.setKeyword(keyword);
+        pageRequestDTO.setType(type);
 
-        
+        log.info(pageRequestDTO);
+
+        PageResponseDTO<TodoDTO> pageResponseDTO = todoService.todoList(pageRequestDTO);
 
         model.addAttribute("TodoObj", pageResponseDTO);
 
         // model.addAttribute("TodoList", TodoService.TodoList());
-
-        log.info("-----------여기까지인가2------=======================");
         
         return "todo/list";
     }

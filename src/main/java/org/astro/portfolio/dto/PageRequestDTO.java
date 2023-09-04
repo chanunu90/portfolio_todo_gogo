@@ -2,20 +2,20 @@ package org.astro.portfolio.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@Data
 @ToString
 public class PageRequestDTO {
 
   //검색 할때 넣을것들
   //타입
-  private String type;
+  private String types;
   //내용
   private String keyword;
 
