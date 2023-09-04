@@ -67,7 +67,7 @@ public class TodoMappersTests {
     public void selectSearch(){
 
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
-        .type("123")
+        .types("123")
         .keyword("차은우")
         .build();
         
