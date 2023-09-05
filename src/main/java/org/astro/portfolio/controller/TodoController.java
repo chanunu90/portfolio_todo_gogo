@@ -23,13 +23,16 @@ public class TodoController {
    private final org.astro.portfolio.service.TodoService todoService;
 
     @GetMapping("list")
-    public String todoSelectAll(PageRequestDTO pageRequestDTO, String keyword, String types, Model model){
+    public String todoSelectAll(PageRequestDTO pageRequestDTO, String keyword, String type, Model model){
 
         log.info("-----------리스트 불러오기------=======================");
 
         pageRequestDTO.setKeyword(keyword);
 
-        //타입들 짤라서 객체로 넣어줘야할듯 함 오후에 이것부터해라
+
+        //타입들 짤라서 배열로 넣어줘야할듯 함 오후에 이것부터해라
+        String[] types = (type != null ? types = type.trim().split("") : null);
+
         pageRequestDTO.setTypes(types);
 
         log.info(pageRequestDTO);

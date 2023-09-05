@@ -15,7 +15,7 @@ public class PageRequestDTO {
 
   //검색 할때 넣을것들
   //타입
-  private String types;
+  private String[] types;
   //내용
   private String keyword;
 

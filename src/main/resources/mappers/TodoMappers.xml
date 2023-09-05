@@ -41,7 +41,7 @@
     <select id="getListCount" resultType="long">
         select count(*) 
         from 
-        (select tno from tbl_todo 
+        (select tno from tbl_todo tt
         <where>
             tno > 0 
             <if test="keyword != null and types != null">

@@ -24,8 +24,18 @@ public class TodoMappersTests {
     @Test
     public void selectAll(){
 
-        // List<TodoDTO> TodoList = mappers.todoSelectAll(PageRequestDTO pageRequestDTO);
-        // log.info(TodoList);
+
+
+        String[] types = "tc".split("");
+
+
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+        .keyword("차은우")
+        .types(types)
+        .build();
+
+        List<TodoDTO> TodoList = mappers.todoSelectAll(pageRequestDTO);
+        log.info(TodoList);
 
     };
 
